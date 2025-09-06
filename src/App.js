@@ -15,6 +15,11 @@ import {
   findEnd
 } from './algorithms';
 
+/**
+ * The main application component.
+ * It manages the state and logic for the grid, algorithms, and user interactions.
+ * @returns {React.Component} The main App component.
+ */
 const App = () => {
   const [grid, setGrid] = useState([]);
   const [start, setStart] = useState({ row: 10, col: 15 });
@@ -36,11 +41,13 @@ const App = () => {
   const [isGridReady, setIsGridReady] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Initialize grid
   useEffect(() => {
     initializeGrid();
   }, []);
 
+  /**
+   * Initializes the grid with a default size and sets the start and end points.
+   */
   const initializeGrid = useCallback(() => {
     const newGrid = createGridWithWalls(20, 50);
     newGrid[start.row][start.col].isStart = true;
@@ -49,7 +56,9 @@ const App = () => {
     setIsGridReady(true);
   }, [start, end]);
 
-  // Reset grid
+  /**
+   * Resets the grid to its initial state, clearing paths and statistics.
+   */
   const handleReset = useCallback(() => {
     setIsRunning(false);
     setIsPaused(false);
@@ -66,7 +75,9 @@ const App = () => {
     });
   }, [grid]);
 
-  // Clear walls
+  /**
+   * Clears all walls from the grid.
+   */
   const handleClearWalls = useCallback(() => {
     if (!grid || grid.length === 0) return;
     const newGrid = grid.map(row =>
@@ -75,14 +86,20 @@ const App = () => {
     setGrid(newGrid);
   }, [grid]);
 
-  // Generate random walls
+  /**
+   * Generates a new random set of walls on the grid.
+   */
   const handleGenerateWalls = useCallback(() => {
     if (!grid || grid.length === 0) return;
     const newGrid = generateRandomWalls(grid, 0.3);
     setGrid(newGrid);
   }, [grid]);
 
-  // Change grid size
+  /**
+   * Handles changes to the grid size, creating a new grid and resetting the state.
+   * @param {number} rows - The new number of rows.
+   * @param {number} cols - The new number of columns.
+   */
   const handleGridSizeChange = useCallback((rows, cols) => {
     const newGrid = createGridWithWalls(rows, cols);
     const newStart = { row: Math.floor(rows / 2), col: Math.floor(cols / 4) };
@@ -98,7 +115,11 @@ const App = () => {
     handleReset();
   }, [handleReset]);
 
-  // Handle mouse events for drawing walls
+  /**
+   * Handles the mouse down event on a cell, initiating drawing or moving start/end points.
+   * @param {number} row - The row of the cell.
+   * @param {number} col - The column of the cell.
+   */
   const handleMouseDown = useCallback((row, col) => {
     if (isRunning || !grid || grid.length === 0) return;
     
@@ -112,6 +133,11 @@ const App = () => {
     }
   }, [isRunning, wallType, grid]);
 
+  /**
+   * Handles the mouse enter event on a cell, continuing the drawing action.
+   * @param {number} row - The row of the cell.
+   * @param {number} col - The column of the cell.
+   */
   const handleMouseEnter = useCallback((row, col) => {
     if (!mouseIsPressed || isRunning || !grid || grid.length === 0) return;
     
@@ -124,11 +150,18 @@ const App = () => {
     }
   }, [mouseIsPressed, isRunning, wallType, grid]);
 
+  /**
+   * Handles the mouse up event, ending the drawing action.
+   */
   const handleMouseUp = useCallback(() => {
     setMouseIsPressed(false);
   }, []);
 
-  // Toggle wall
+  /**
+   * Toggles a cell's wall state.
+   * @param {number} row - The row of the cell.
+   * @param {number} col - The column of the cell.
+   */
   const handleWallToggle = useCallback((row, col) => {
     if (!grid || !grid[row] || !grid[row][col] || grid[row][col].isStart || grid[row][col].isEnd) return;
     
@@ -140,7 +173,11 @@ const App = () => {
     setGrid(newGrid);
   }, [grid]);
 
-  // Change start position
+  /**
+   * Changes the position of the start node.
+   * @param {number} row - The new row for the start node.
+   * @param {number} col - The new column for the start node.
+   */
   const handleStartChange = useCallback((row, col) => {
     if (!grid || !grid[row] || !grid[row][col] || grid[row][col].isEnd || grid[row][col].isWall) return;
     
@@ -155,7 +192,11 @@ const App = () => {
     setStart({ row, col });
   }, [grid]);
 
-  // Change end position
+  /**
+   * Changes the position of the end node.
+   * @param {number} row - The new row for the end node.
+   * @param {number} col - The new column for the end node.
+   */
   const handleEndChange = useCallback((row, col) => {
     if (!grid || !grid[row] || !grid[row][col] || grid[row][col].isStart || grid[row][col].isWall) return;
     
@@ -170,7 +211,9 @@ const App = () => {
     setEnd({ row, col });
   }, [grid]);
 
-  // Run algorithm
+  /**
+   * Runs the selected pathfinding algorithm and updates the state with the results.
+   */
   const runAlgorithm = useCallback(async () => {
     if (isRunning || !grid || grid.length === 0) return;
     
@@ -205,7 +248,6 @@ const App = () => {
     const endTime = performance.now();
     const executionTime = endTime - startTime;
     
-    // Animate the algorithm
     await animateAlgorithm(result.visitedNodesInOrder, result.shortestPath, speed);
     
     setStats({
@@ -218,23 +260,25 @@ const App = () => {
     setIsRunning(false);
   }, [algorithm, grid, start, end, speed, isRunning]);
 
-  // Animate algorithm execution
+  /**
+   * Animates the pathfinding algorithm's execution, showing visited nodes and the final path.
+   * @param {Array<Object>} visitedNodesInOrder - The array of nodes visited in order.
+   * @param {Array<Object>} shortestPath - The array of nodes in the shortest path.
+   * @param {number} speed - The animation speed.
+   */
   const animateAlgorithm = useCallback(async (visitedNodesInOrder, shortestPath, speed) => {
     const delay = 1000 / speed;
     
     // Animate visited nodes
     for (let i = 0; i < visitedNodesInOrder.length; i++) {
-      // Check for stop flag
       if (shouldStop) {
         return;
       }
       
-      // Check for pause at each step
       while (isPaused && !shouldStop) {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      // Check again after pause
       if (shouldStop) {
         return;
       }
@@ -256,17 +300,14 @@ const App = () => {
     
     // Animate shortest path
     for (let i = 0; i < shortestPath.length; i++) {
-      // Check for stop flag
       if (shouldStop) {
         return;
       }
       
-      // Check for pause at each step
       while (isPaused && !shouldStop) {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      // Check again after pause
       if (shouldStop) {
         return;
       }
@@ -287,19 +328,25 @@ const App = () => {
     }
   }, [isPaused, shouldStop]);
 
-  // Pause/Resume
+  /**
+   * Pauses or resumes the algorithm animation.
+   */
   const handlePauseResume = useCallback(() => {
     setIsPaused(!isPaused);
   }, [isPaused]);
 
-  // Stop algorithm
+  /**
+   * Stops the currently running algorithm animation.
+   */
   const handleStop = useCallback(() => {
     setShouldStop(true);
     setIsRunning(false);
     setIsPaused(false);
   }, []);
 
-  // Toggle Dark Mode
+  /**
+   * Toggles between light and dark mode.
+   */
   const toggleDarkMode = useCallback(() => {
     setIsDarkMode(!isDarkMode);
   }, [isDarkMode]);

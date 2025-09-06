@@ -1,5 +1,17 @@
 import React from 'react';
 
+/**
+ * Renders the statistics of the last algorithm run.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.stats - An object containing the statistics.
+ * @param {number} props.stats.visitedNodes - The number of nodes visited.
+ * @param {number} props.stats.pathLength - The length of the shortest path.
+ * @param {number} props.stats.executionTime - The time taken for the algorithm to run.
+ * @param {string} props.stats.algorithm - The name of the algorithm used.
+ * @param {boolean} props.isDarkMode - A boolean indicating if dark mode is enabled.
+ * @returns {React.Component} The statistics component.
+ */
 const Stats = ({ stats, isDarkMode }) => {
   const { visitedNodes, pathLength, executionTime, algorithm } = stats;
 

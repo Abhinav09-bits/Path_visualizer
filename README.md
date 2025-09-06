@@ -10,16 +10,19 @@ A beautiful and interactive web application that visualizes three fundamental pa
 - **Dynamic Start/End Positioning**: Easily reposition start and end points
 - **Multiple Drawing Modes**: Switch between wall drawing, start positioning, and end positioning
 
-### **Three Pathfinding Algorithms**
+### **Five Pathfinding Algorithms**
 1. **Dijkstra's Algorithm**: Optimal shortest path with weighted edges
 2. **Breadth-First Search (BFS)**: Shortest path in unweighted graphs
 3. **Depth-First Search (DFS)**: Memory-efficient exploration (may not find shortest path)
+4. **A* Search**: Efficiently finds the shortest path using heuristics.
+5. **Greedy Best-First Search**: A faster, heuristic-based search that doesn't guarantee the shortest path.
 
 ### **Visual Controls**
-- **Speed Control**: Adjustable animation speed from 1x to 50x
+- **Speed Control**: Adjustable animation speed from 1x to 100x
 - **Pause/Resume**: Control algorithm execution in real-time
 - **Random Wall Generation**: Create new mazes with one click
 - **Grid Reset**: Clear all paths and start fresh
+- **Dark Mode**: Toggle between light and dark themes for comfortable viewing.
 
 ### **Real-time Statistics**
 - **Performance Metrics**: Execution time, nodes visited, path length

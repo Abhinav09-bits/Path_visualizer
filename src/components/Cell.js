@@ -1,6 +1,20 @@
 import React from 'react';
 
+/**
+ * Renders a single cell in the grid.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.cell - The cell object with its properties.
+ * @param {Function} props.onMouseDown - Function to handle mouse down events.
+ * @param {Function} props.onMouseEnter - Function to handle mouse enter events.
+ * @param {Function} props.onMouseUp - Function to handle mouse up events.
+ * @returns {React.Component} A single cell component.
+ */
 const Cell = ({ cell, onMouseDown, onMouseEnter, onMouseUp }) => {
+  /**
+   * Determines the CSS classes for the cell based on its state.
+   * @returns {string} A string of CSS classes.
+   */
   const getCellClasses = () => {
     const classes = ['cell'];
     
@@ -15,6 +29,10 @@ const Cell = ({ cell, onMouseDown, onMouseEnter, onMouseUp }) => {
     return classes.join(' ');
   };
 
+  /**
+   * Determines the content to display within the cell.
+   * @returns {string} The character or symbol to display.
+   */
   const getCellContent = () => {
     if (cell.isStart) return 'S';
     if (cell.isEnd) return 'E';

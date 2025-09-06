@@ -1,32 +1,64 @@
 // Priority Queue implementation for Dijkstra's algorithm
+/**
+ * A simple Priority Queue implementation.
+ */
 class PriorityQueue {
+  /**
+   * Initializes a new instance of the PriorityQueue.
+   */
   constructor() {
     this.values = [];
   }
 
+  /**
+   * Adds an element to the queue with a given priority.
+   * @param {*} val - The value to add to the queue.
+   * @param {number} priority - The priority of the value.
+   */
   enqueue(val, priority) {
     this.values.push({ val, priority });
     this.sort();
   }
 
+  /**
+   * Removes and returns the element with the highest priority (lowest priority number).
+   * @returns {{val: *, priority: number} | undefined} The element with the highest priority, or undefined if the queue is empty.
+   */
   dequeue() {
     return this.values.shift();
   }
 
+  /**
+   * Sorts the queue based on priority in ascending order.
+   */
   sort() {
     this.values.sort((a, b) => a.priority - b.priority);
   }
 
+  /**
+   * Checks if the queue is empty.
+   * @returns {boolean} True if the queue is empty, false otherwise.
+   */
   isEmpty() {
     return this.values.length === 0;
   }
 
-  // Check if a node with given coordinates exists
+  /**
+   * Checks if a node with the given coordinates exists in the queue.
+   * @param {number} row - The row of the node.
+   * @param {number} col - The column of the node.
+   * @returns {boolean} True if the node exists, false otherwise.
+   */
   hasNode(row, col) {
     return this.values.some(item => item.val.row === row && item.val.col === col);
   }
 
-  // Update priority of existing node
+  /**
+   * Updates the priority of an existing node in the queue.
+   * @param {number} row - The row of the node to update.
+   * @param {number} col - The column of the node to update.
+   * @param {number} newPriority - The new priority for the node.
+   */
   updatePriority(row, col, newPriority) {
     const index = this.values.findIndex(item => 
       item.val.row === row && item.val.col === col
@@ -38,8 +70,17 @@ class PriorityQueue {
   }
 }
 
-// Node class for tracking path information
+/**
+ * Represents a node in the grid for pathfinding algorithms.
+ */
 class Node {
+  /**
+   * Creates a new Node instance.
+   * @param {number} row - The row of the node.
+   * @param {number} col - The column of the node.
+   * @param {number} [distance=Infinity] - The distance from the start node.
+   * @param {Node|null} [previous=null] - The previous node in the path.
+   */
   constructor(row, col, distance = Infinity, previous = null) {
     this.row = row;
     this.col = col;
@@ -48,7 +89,14 @@ class Node {
   }
 }
 
-// Dijkstra's Algorithm - finds shortest path using weighted edges
+/**
+ * Performs Dijkstra's algorithm to find the shortest path in a grid.
+ * @param {Array<Array<Object>>} grid - The grid of nodes.
+ * @param {Object} start - The start node coordinates {row, col}.
+ * @param {Object} end - The end node coordinates {row, col}.
+ * @param {number} [speed=10] - The speed of the visualization (not used in calculation).
+ * @returns {{visitedNodesInOrder: Array<Object>, shortestPath: Array<Object>, distances: Array<Array<number>>}} An object containing the visited nodes, the shortest path, and the distances.
+ */
 export const dijkstra = (grid, start, end, speed = 10) => {
   // Validate inputs
   if (!grid || !grid.length || !grid[0] || !grid[0].length || !start || !end) {
@@ -122,7 +170,14 @@ export const dijkstra = (grid, start, end, speed = 10) => {
   return { visitedNodesInOrder, shortestPath, distances };
 };
 
-// Breadth-First Search - finds shortest path in unweighted graph
+/**
+ * Performs Breadth-First Search to find the shortest path in an unweighted grid.
+ * @param {Array<Array<Object>>} grid - The grid of nodes.
+ * @param {Object} start - The start node coordinates {row, col}.
+ * @param {Object} end - The end node coordinates {row, col}.
+ * @param {number} [speed=10] - The speed of the visualization (not used in calculation).
+ * @returns {{visitedNodesInOrder: Array<Object>, shortestPath: Array<Object>}} An object containing the visited nodes and the shortest path.
+ */
 export const bfs = (grid, start, end, speed = 10) => {
   // Validate inputs
   if (!grid || !grid.length || !grid[0] || !grid[0].length || !start || !end) {
@@ -161,7 +216,14 @@ export const bfs = (grid, start, end, speed = 10) => {
   return { visitedNodesInOrder, shortestPath };
 };
 
-// Depth-First Search - explores as far as possible along each branch
+/**
+ * Performs Depth-First Search to find a path in a grid.
+ * @param {Array<Array<Object>>} grid - The grid of nodes.
+ * @param {Object} start - The start node coordinates {row, col}.
+ * @param {Object} end - The end node coordinates {row, col}.
+ * @param {number} [speed=10] - The speed of the visualization (not used in calculation).
+ * @returns {{visitedNodesInOrder: Array<Object>, shortestPath: Array<Object>}} An object containing the visited nodes and the path found.
+ */
 export const dfs = (grid, start, end, speed = 10) => {
   // Validate inputs
   if (!grid || !grid.length || !grid[0] || !grid[0].length || !start || !end) {
@@ -200,14 +262,20 @@ export const dfs = (grid, start, end, speed = 10) => {
   return { visitedNodesInOrder, shortestPath };
 };
 
-// Get valid neighbors for a given cell
+/**
+ * Gets the valid neighbors of a cell in the grid.
+ * @param {number} row - The row of the cell.
+ * @param {number} col - The column of the cell.
+ * @param {Array<Array<Object>>} grid - The grid.
+ * @returns {Array<Object>} An array of neighbor nodes.
+ */
 const getNeighbors = (row, col, grid) => {
   const neighbors = [];
   const directions = [
-    { row: -1, col: 0 }, // up
-    { row: 1, col: 0 },  // down
-    { row: 0, col: -1 }, // left
-    { row: 0, col: 1 }   // right
+    { row: -1, col: 0 },
+    { row: 1, col: 0 },
+    { row: 0, col: -1 },
+    { row: 0, col: 1 }
   ];
   
   for (const direction of directions) {
@@ -222,12 +290,23 @@ const getNeighbors = (row, col, grid) => {
   return neighbors;
 };
 
-// Check if position is valid within grid bounds
+/**
+ * Checks if a position is within the grid bounds.
+ * @param {number} row - The row to check.
+ * @param {number} col - The column to check.
+ * @param {Array<Array<Object>>} grid - The grid.
+ * @returns {boolean} True if the position is valid, false otherwise.
+ */
 const isValidPosition = (row, col, grid) => {
   return row >= 0 && row < grid.length && col >= 0 && col < grid[0].length;
 };
 
-// Get the shortest path by backtracking from end to start
+/**
+ * Reconstructs the shortest path from the `previousNodes` map.
+ * @param {Array<Array<Object>>} previousNodes - A grid where each cell points to the previous node in the path.
+ * @param {Object} end - The end node.
+ * @returns {Array<Object>} An array of nodes representing the shortest path.
+ */
 const getNodesInShortestPathOrder = (previousNodes, end) => {
   const nodesInShortestPathOrder = [];
   let currentNode = previousNodes[end.row][end.col];
@@ -245,7 +324,12 @@ const getNodesInShortestPathOrder = (previousNodes, end) => {
   return nodesInShortestPathOrder;
 };
 
-// Utility function to create a grid with walls
+/**
+ * Creates a grid with the specified number of rows and columns.
+ * @param {number} rows - The number of rows for the grid.
+ * @param {number} cols - The number of columns for the grid.
+ * @returns {Array<Array<Object>>} The newly created grid.
+ */
 export const createGridWithWalls = (rows, cols) => {
   const grid = [];
   
@@ -270,7 +354,12 @@ export const createGridWithWalls = (rows, cols) => {
   return grid;
 };
 
-// Generate random walls
+/**
+ * Generates random walls on the grid.
+ * @param {Array<Array<Object>>} grid - The grid to add walls to.
+ * @param {number} [wallPercentage=0.3] - The percentage of cells to turn into walls.
+ * @returns {Array<Array<Object>>} The grid with random walls.
+ */
 export const generateRandomWalls = (grid, wallPercentage = 0.3) => {
   const newGrid = grid.map(row => 
     row.map(cell => ({ ...cell, isWall: Math.random() < wallPercentage }))
@@ -286,7 +375,11 @@ export const generateRandomWalls = (grid, wallPercentage = 0.3) => {
   return newGrid;
 };
 
-// Find start node in grid
+/**
+ * Finds the start node in the grid.
+ * @param {Array<Array<Object>>} grid - The grid to search.
+ * @returns {{row: number, col: number} | null} The coordinates of the start node, or null if not found.
+ */
 export const findStart = (grid) => {
   for (let row = 0; row < grid.length; row++) {
     for (let col = 0; col < grid[0].length; col++) {
@@ -298,7 +391,11 @@ export const findStart = (grid) => {
   return null;
 };
 
-// Find end node in grid
+/**
+ * Finds the end node in the grid.
+ * @param {Array<Array<Object>>} grid - The grid to search.
+ * @returns {{row: number, col: number} | null} The coordinates of the end node, or null if not found.
+ */
 export const findEnd = (grid) => {
   for (let row = 0; row < grid.length; row++) {
     for (let col = 0; col < grid[0].length; col++) {
@@ -310,7 +407,11 @@ export const findEnd = (grid) => {
   return null;
 };
 
-// Clear grid (remove visited, path, etc.)
+/**
+ * Clears the grid of pathfinding-related properties (visited, path, etc.).
+ * @param {Array<Array<Object>>} grid - The grid to clear.
+ * @returns {Array<Array<Object>>} The cleared grid.
+ */
 export const clearGrid = (grid) => {
   return grid.map(row =>
     row.map(cell => ({
@@ -323,7 +424,14 @@ export const clearGrid = (grid) => {
   );
 };
 
-// A* Algorithm - finds shortest path using heuristic
+/**
+ * Performs the A* search algorithm to find the shortest path using a heuristic.
+ * @param {Array<Array<Object>>} grid - The grid of nodes.
+ * @param {Object} start - The start node coordinates {row, col}.
+ * @param {Object} end - The end node coordinates {row, col}.
+ * @param {number} [speed=10] - The speed of the visualization (not used in calculation).
+ * @returns {{visitedNodesInOrder: Array<Object>, shortestPath: Array<Object>}} An object containing the visited nodes and the shortest path.
+ */
 export const astar = (grid, start, end, speed = 10) => {
   // Validate inputs
   if (!grid || !grid.length || !grid[0] || !grid[0].length || !start || !end) {
@@ -384,7 +492,14 @@ export const astar = (grid, start, end, speed = 10) => {
   return { visitedNodesInOrder, shortestPath };
 };
 
-// Greedy Best-First Search Algorithm
+/**
+ * Performs the Greedy Best-First Search algorithm.
+ * @param {Array<Array<Object>>} grid - The grid of nodes.
+ * @param {Object} start - The start node coordinates {row, col}.
+ * @param {Object} end - The end node coordinates {row, col}.
+ * @param {number} [speed=10] - The speed of the visualization (not used in calculation).
+ * @returns {{visitedNodesInOrder: Array<Object>, shortestPath: Array<Object>}} An object containing the visited nodes and the path found.
+ */
 export const greedy = (grid, start, end, speed = 10) => {
   // Validate inputs
   if (!grid || !grid.length || !grid[0] || !grid[0].length || !start || !end) {
@@ -433,9 +548,12 @@ export const greedy = (grid, start, end, speed = 10) => {
   return { visitedNodesInOrder, shortestPath };
 };
 
-
-
-// Manhattan Distance heuristic function
+/**
+ * Calculates the Manhattan distance heuristic between two nodes.
+ * @param {Object} nodeOne - The first node {row, col}.
+ * @param {Object} nodeTwo - The second node {row, col}.
+ * @returns {number} The Manhattan distance between the two nodes.
+ */
 const manhattanDistance = (nodeOne, nodeTwo) => {
   const xChange = Math.abs(nodeOne.row - nodeTwo.row);
   const yChange = Math.abs(nodeOne.col - nodeTwo.col);
